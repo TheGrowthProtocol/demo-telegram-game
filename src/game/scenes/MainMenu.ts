@@ -8,6 +8,7 @@ export class MainMenu extends Scene {
     title: GameObjects.Text;
     playButton: GameObjects.Text;
     logoTween: Phaser.Tweens.Tween | null;
+    private walletText: Phaser.GameObjects.Text;
 
     constructor() {
         super("MainMenu");
@@ -63,7 +64,65 @@ export class MainMenu extends Scene {
             ease: "Sine.easeInOut",
         });
 
+        // Add wallet connect button
+        const connectButton = this.add.text(
+            this.cameras.main.width - 20, // Position from right edge
+            20, // Position from top
+            'Connect Wallet',
+            {
+                fontFamily: 'Arial',
+                fontSize: '24px',
+                color: '#ffffff',
+                backgroundColor: '#4CAF50',
+                padding: { x: 20, y: 10 }
+            }
+        )
+            .setOrigin(1, 0) // Align to top-right corner
+            .setInteractive({ useHandCursor: true });
+
+        // Add wallet status text
+        this.walletText = this.add.text(
+            this.cameras.main.width - 20,
+            60, // Position below connect button
+            '',
+            {
+                fontFamily: 'Arial',
+                fontSize: '16px',
+                color: '#ffffff'
+            }
+        ).setOrigin(1, 0); // Align to right edge
+
+        // Handle button click
+        connectButton.on('pointerdown', async () => {
+            try {
+                const account = null;
+                if (account) {
+                    this.walletText.setText(`Connected: ${this.shortenAddress(account)}`);
+                    connectButton.setVisible(false);
+                }
+            } catch (error) {
+                console.error('Failed to connect wallet:', error);
+                this.walletText.setText('Failed to connect wallet');
+            }
+        });
+
+        // Handle hover effects
+        connectButton
+            .on('pointerover', () => {
+                connectButton.setStyle({ backgroundColor: '#45a049' });
+            })
+            .on('pointerout', () => {
+                connectButton.setStyle({ backgroundColor: '#4CAF50' });
+            });
+
         EventBus.emit("current-scene-ready", this);
+    }
+
+    updateWalletStatus(address: string | null) {
+        const text = address 
+            ? `Connected: ${address.slice(0, 6)}...${address.slice(-4)}`
+            : 'Not Connected';
+        this.walletText.setText(text);
     }
 
     changeScene() {
@@ -75,10 +134,12 @@ export class MainMenu extends Scene {
         // Add a simple fade out transition
         this.cameras.main.fadeOut(500);
         this.cameras.main.once("camerafadeoutcomplete", () => {
-            this.scene.start("GameOver");
+            this.scene.start("Game");
         });
     }
 
-    // ... rest of the code remains the same
+    private shortenAddress(address: string): string {
+        return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+    }
 }
 
