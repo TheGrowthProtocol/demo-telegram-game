@@ -119,6 +119,42 @@ export class Game extends Scene {
         this.spawnTile();
         this.spawnTile();
         this.input.keyboard?.on("keydown", this.handleInput, this);
+
+        // Add touch input handling
+        let startX: number = 0;
+        let startY: number = 0;
+        const swipeThreshold = 50; // Minimum distance for a swipe
+
+        //Add touch input
+        this.input.on('pointerdown', (pointer: Phaser.Input.Pointer) => {
+            startX = pointer.x;
+            startY = pointer.y;
+        });
+
+        this.input.on('pointerup', (pointer: Phaser.Input.Pointer) => {
+            const deltaX = pointer.x - startX;
+            const deltaY = pointer.y - startY;
+            
+            // Only process if we have a significant swipe
+            if (Math.abs(deltaX) > swipeThreshold || Math.abs(deltaY) > swipeThreshold) {
+                // Determine which direction had the larger movement
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // Horizontal swipe
+                    if (deltaX > 0) {
+                        this.handleInput({ key: 'ArrowRight' } as KeyboardEvent);
+                    } else {
+                        this.handleInput({ key: 'ArrowLeft' } as KeyboardEvent);
+                    }
+                } else {
+                    // Vertical swipe
+                    if (deltaY > 0) {
+                        this.handleInput({ key: 'ArrowDown' } as KeyboardEvent);
+                    } else {
+                        this.handleInput({ key: 'ArrowUp' } as KeyboardEvent);
+                    }
+                }
+            }
+        });
     }
 
     createBackground() {
