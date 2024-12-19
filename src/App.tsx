@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { IRefPhaserGame, PhaserGame } from "./game/PhaserGame";
+import WalletConnect from "./components/WalletConnect";
 
 function App() {
     // The sprite can only be moved in the MainMenu Scene
@@ -15,7 +16,12 @@ function App() {
 
     return (
         <div id="app">
-            <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
+            <div className="outer-container">
+                <div className="header-container">
+                    <WalletConnect />
+                </div>
+                <PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
+            </div>
         </div>
     );
 }

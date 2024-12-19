@@ -1,4 +1,16 @@
 #game-container {
     width: 100vw;
+    height: 95vh;
+}
+
+.outer-container {
     height: 100vh;
+}
+
+.header-container {
+    height: 5vh;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
 }
