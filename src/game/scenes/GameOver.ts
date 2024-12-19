@@ -10,22 +10,19 @@ export class GameOver extends Scene {
         super("GameOver");
     }
 
-    preload() {
-        this.load.image('play-icon', '/assets/icons/play.png');
-        this.load.image('home-icon', '/assets/icons/home.png');
-    }
-
     create() {
         this.camera = this.cameras.main;
         const centerX = this.cameras.main.centerX;
         const centerY = this.cameras.main.centerY;
         this.camera.setBackgroundColor(0xff0000);
 
-        this.background = this.add.image(512, 384, "background");
+        this.background = this.add
+            .image(centerX, centerY, "background")
+            .setDisplaySize(this.cameras.main.width, this.cameras.main.height);
         this.background.setAlpha(0.5);
 
         this.gameOverText = this.add
-            .text(512, 384, "Game Over", {
+            .text(centerX, centerY - 100, "Game Over", {
                 fontFamily: "Arial Black",
                 fontSize: 64,
                 color: "#ffffff",
@@ -36,66 +33,54 @@ export class GameOver extends Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
-        // Add play again button with icon
-        const playIcon = this.add
-            .image(centerX-75, centerY+50, 'play-icon')
-            .setScale(0.1)
-            .setOrigin(0.1);
+        // Add play again button
+        const playText = this.add
+            .text(centerX - 200, centerY, "Play Again", {
+                fontFamily: "Arial",
+                fontSize: "32px",
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 4,
+            })
+            .setOrigin(0, 0.5);
 
         // Update interactive events to use the container
-        playIcon
+        playText
             .setInteractive({ useHandCursor: true })
             .on("pointerover", () => {
-                playIcon.setScale(0.11);
+                playText.setColor("#000000");
             })
             .on("pointerout", () => {
-                playIcon.setScale(0.1);
+                playText.setColor("#ffffff");
             })
             .on("pointerdown", () => {
                 this.scene.start("Game");
             });
 
-        // Add animation to play button
-        this.tweens.add({
-            targets: playIcon,
-            scale: 0.11,
-            duration: 1000,
-            yoyo: true,
-            repeat: -1,
-            ease: "Sine.easeInOut",
-        });
-
         // Add play again button with icon
-        const homeIcon = this.add
-            .image(centerX+50, centerY+50, 'home-icon')
-            .setScale(0.1)
-            .setOrigin(0.1);
+        const homeText = this.add
+            .text(centerX + 50, centerY, "Main Menu", {
+                fontFamily: "Arial",
+                fontSize: "32px",
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 4,
+            })
+            .setOrigin(0, 0.5);
 
         // Update interactive events to use the container
-        homeIcon
+        homeText
             .setInteractive({ useHandCursor: true })
             .on("pointerover", () => {
-                homeIcon.setScale(0.11);
+                homeText.setColor("#000000");
             })
             .on("pointerout", () => {
-                homeIcon.setScale(0.1);
+                homeText.setColor("#ffffff");
             })
             .on("pointerdown", () => {
                 this.scene.start("MainMenu");
             });
-
-        // Add animation to play button
-        this.tweens.add({
-            targets: homeIcon,
-            scale: 0.11,
-            duration: 1000,
-            yoyo: true,
-            repeat: -1,
-            ease: "Sine.easeInOut",
-        });
-
         EventBus.emit("current-scene-ready", this);
     }
-
 }
 

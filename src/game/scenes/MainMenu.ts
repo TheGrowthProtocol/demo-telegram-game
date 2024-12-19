@@ -19,12 +19,14 @@ export class MainMenu extends Scene {
     }
 
     create() {
-        this.background = this.add.image(512, 384, "background");
-        const centerX = this.cameras.main.centerX;
-        const centerY = this.cameras.main.centerY;
+        this.background = this.background = this.add.image(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY,
+            "background"
+        ).setDisplaySize(this.cameras.main.width, this.cameras.main.height);
         // Add title
         this.title = this.add
-            .text(512, 200, "2048", {
+            .text(this.cameras.main.centerX, this.cameras.main.centerY -100, "2048", {
                 fontFamily: "Arial Black",
                 fontSize: 120,
                 color: "#ffffff",
@@ -35,34 +37,29 @@ export class MainMenu extends Scene {
             .setOrigin(0.5)
             .setDepth(100);
 
-        /// Add play again button with icon
-        const playIcon = this.add
-            .image(centerX, centerY + 50, "play-icon")
-            .setScale(0.1)
-            .setOrigin(0.1);
+        /// Add play button 
+        const playText = this.add
+            .text(this.cameras.main.centerX - 75, this.cameras.main.centerY, "Play Game", {
+                fontFamily: "Arial",
+                fontSize: "32px",
+                color: "#ffffff",
+                stroke: "#000000",
+                strokeThickness: 4
+            })
+            .setOrigin(0, 0.5);
 
         // Update interactive events to use the container
-        playIcon
+        playText
             .setInteractive({ useHandCursor: true })
             .on("pointerover", () => {
-                playIcon.setScale(0.11);
+                playText.setColor("#000000");
             })
             .on("pointerout", () => {
-                playIcon.setScale(0.1);
+                playText.setColor("#ffffff");
             })
             .on("pointerdown", () => {
                 this.changeScene();
             });
-
-        // Add animation to play button
-        this.tweens.add({
-            targets: playIcon,
-            scale: 0.11,
-            duration: 1000,
-            yoyo: true,
-            repeat: -1,
-            ease: "Sine.easeInOut",
-        });
 
         // Add wallet connect button
         const connectButton = this.add.text(

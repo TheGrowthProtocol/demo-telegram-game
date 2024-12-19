@@ -108,7 +108,11 @@ export class Game extends Scene {
     }
 
     create() {
-        this.background = this.add.image(512, 384, "background");
+        this.background = this.add.image(
+            this.cameras.main.centerX,
+            this.cameras.main.centerY,
+            "background"
+        ).setDisplaySize(this.cameras.main.width, this.cameras.main.height);
         this.createBackground();
         this.createGrid();
         this.createScoreBoard();
